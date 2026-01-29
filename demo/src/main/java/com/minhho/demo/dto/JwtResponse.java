@@ -1,4 +1,4 @@
 package com.minhho.demo.dto;
 
-public record JwtResponse(String token){}
+public record JwtResponse(String accessToken, String refreshToken){}
 

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class JwtProperties {
     private long accessTokenExpirationMs;
     private long refreshTokenExpirationMs;
+    private String secret;
 
     public long getAccessTokenExpirationMs(){
         return accessTokenExpirationMs;
@@ -23,6 +24,14 @@ public class JwtProperties {
 
     public void setRefreshTokenExpirationMs(long refreshTokenExpirationMs){
         this.refreshTokenExpirationMs = refreshTokenExpirationMs;
+    }
+
+    public String getSecret(){
+        return secret;
+    }
+
+    public void setSecret(String key){
+        secret = key;
     }
 
 }

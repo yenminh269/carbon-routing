@@ -3,7 +3,6 @@ package com.minhho.demo.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
 public class RefreshToken {
@@ -21,5 +20,28 @@ public class RefreshToken {
     @Column(nullable = false)
     private Instant expire;
 
+    public void setToken(String token){
+        this.token = token;
+    }
+
+    public String getToken(){
+        return token;
+    }
+
+    public void setExpiryDate(Instant expire){
+        this.expire = expire;
+    }
+
+    public Instant getExpiryDate(){
+        return expire;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public User getUser(){
+        return user;
+    }
 
 }

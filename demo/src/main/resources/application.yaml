@@ -19,3 +19,4 @@ spring:
 jwt:
   access-token-expiration-ms: 3600000 # 1  hour
   refresh-token-expiration-ms: 86400000 # 1  hour
+  secret: my-very-super-secret-key-minh-ho-26092001
