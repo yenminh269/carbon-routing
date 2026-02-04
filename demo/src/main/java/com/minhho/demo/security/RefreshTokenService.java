@@ -45,4 +45,11 @@ public class RefreshTokenService {
         }
         return refreshToken;
     }
+
+    public void deleteByUsername(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        refreshTokenRepository.deleteByUserId(user.getId());
+
+    }
 }

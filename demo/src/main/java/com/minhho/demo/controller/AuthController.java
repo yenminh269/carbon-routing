@@ -61,4 +61,11 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(Authentication authentication){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        refreshTokenService.deleteByUsername(userDetails.getUsername());
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
+
 }
