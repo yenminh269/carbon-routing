@@ -6,17 +6,17 @@ public class EcoFastCostStrategy implements CostStrategy{
     double alpha;
     double beta;
     double emissionRate;
-    public EcoFastCostStrategy(double a, double b, double e){
-        alpha = a;
-        beta = b;
-        emissionRate = e;
+    public EcoFastCostStrategy(double alphaMetric, double betaMetric, double initialEmissionRate){
+        alpha = alphaMetric;
+        beta = betaMetric;
+        emissionRate = initialEmissionRate;
     }
     public double calculate(Edge edge){
-        if(edge.distance() == 0){
+        if(edge.distanceInKm() == 0){
             return 0;
         }
-        double carbon = edge.distance() * emissionRate;
-        double time = edge.distance() / edge.avgSpeed();
+        double carbon = edge.distanceInKm() * emissionRate;
+        double time = edge.distanceInKm() / edge.avgSpeedInKmPerHour();
         return alpha * carbon + beta * time;
     }
 }
