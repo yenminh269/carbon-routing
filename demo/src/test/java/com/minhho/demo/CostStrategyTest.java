@@ -1,22 +1,41 @@
 package com.minhho.demo;
 
+import com.minhho.demo.algorithm.Router;
 import com.minhho.demo.model.Edge;
 import com.minhho.demo.model.Node;
-import com.minhho.demo.service.EcoFastCostStrategy;
+import com.minhho.demo.service.CostStrategy;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CostStrategyTest {
-    @Test
-    void testEcoFastCostStrategy(){
-        Node from = new Node(1, 0,0);
-        Node to = new Node(2, 1,1);
-        Edge edge = new Edge(from, to, 10, 50);
-        EcoFastCostStrategy strategy = new EcoFastCostStrategy(0.8, 0.2, 0.192);
-        double expected = (10 * 0.192 * 0.8) + ((10.0 / 50) * 0.2);
-        assertEquals(expected, strategy.calculate(edge), 0.001);
+    Map<Node, List<Edge>> graph = new HashMap<>();
+    CostStrategy costStrategy = new CostStrategy();
+    private Router router;
 
+    @Test
+    void canary(){
+        assertTrue(true);
+    }
+
+    @BeforeEach
+    void init(){
+        Node n0 = new Node(0, 0.5, 0.5);
+        Node n1 = new Node(1, 0.5, 0.5);
+        Node n2 = new Node(2, 0.5, 0.5);
+        graph.put(n0, new ArrayList<>(Arrays.asList(new Edge(n1, 3),
+                                                    new Edge(n2, 5))));
+        graph.put(n1, new ArrayList<>(Arrays.asList(new Edge(n0, 3),
+                                                    new Edge(n2, 7))));
+        graph.put(n2, new ArrayList<>(Arrays.asList(new Edge(n0, 5),
+                                                    new Edge(n1, 7))));
+    }
+
+    @Test
+    void calculateCostWithoutStrategy(){
     }
 
 }
