@@ -9,5 +9,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface Router {
-    Path findShortestPath(Node start, Node end, Map<Node, List<Edge>> graph);
+    List<Node> findShortestPath(Node start, Node end, Map<Node, List<Edge>> graph, CostStrategy strategy);
 }
