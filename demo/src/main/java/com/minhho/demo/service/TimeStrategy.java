@@ -3,15 +3,15 @@ package com.minhho.demo.service;
 import com.minhho.demo.model.Edge;
 import com.minhho.demo.model.Vehicle;
 
-public class CarbonStrategy implements CostStrategy {
+public class TimeStrategy implements CostStrategy {
     private final Vehicle vehicle;
 
-    public CarbonStrategy(Vehicle _vehicle) {
+    public TimeStrategy(Vehicle _vehicle) {
         vehicle = _vehicle;
     }
 
     @Override
     public double calculate(Edge edge) {
-        return edge.distanceInMiles() * vehicle.emissionRate();
+        return edge.distanceInMiles() / vehicle.avgSpeedInMiles();
     }
 }

@@ -1,0 +1,5 @@
+Tesla,0
+Honda Civic,120
+Ford F150,250
+Toyota Prius,90
+Bus,800

@@ -3,13 +3,15 @@ package com.minhho.demo;
 import com.minhho.demo.algorithm.DijkstraRouter;
 import com.minhho.demo.model.Edge;
 import com.minhho.demo.model.Node;
+import com.minhho.demo.model.Path;
+import com.minhho.demo.model.Vehicle;
+import com.minhho.demo.service.CarbonStrategy;
 import com.minhho.demo.service.RouteProcessor;
-import com.minhho.demo.service.SpeedStrategy;
+import com.minhho.demo.service.TimeStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,16 +32,31 @@ public class CostStrategyTest {
         graph.put(n0, new ArrayList<>(Arrays.asList(new Edge(n1, 3), new Edge(n2, 5))));
         graph.put(n1, new ArrayList<>(Arrays.asList(new Edge(n0, 3), new Edge(n2, 7))));
         graph.put(n2, new ArrayList<>(Arrays.asList(new Edge(n0, 5), new Edge(n1, 7))));
+
+        routeProcessor.setRoutingService(new DijkstraRouter());
     }
 
     @Test
-    void returnShortestPath_whenSpeedStrategyGetPassed(){
-        routeProcessor.setRoutingService(new DijkstraRouter());
-        routeProcessor.setStrategy(new SpeedStrategy(30));
+    void returnShortestPath_whenTimeStrategyGetPassed(){
+        Vehicle vehicle  = new Vehicle("Honda Civic", 120, 30);;
+        routeProcessor.setStrategy(new TimeStrategy(vehicle));
 
-        List<Node> expected = List.of(n0, n2);
+        Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
+                5, 600, 0.17);
 
-        assertEquals(expected, routeProcessor.findShortestPath(n0, n2, graph));
+        assertEquals(expected, routeProcessor.findShortestPath(n0, n2, graph, vehicle));
     }
+
+    @Test
+    void returnShortestPath_whenCarbonStrategyGetPassed(){
+        Vehicle vehicle  = new Vehicle("Tesla", 0, 30);
+        routeProcessor.setStrategy(new CarbonStrategy(vehicle));
+
+        Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
+                5, 0, 0.17);
+
+        assertEquals(expected, routeProcessor.findShortestPath(n0, n2, graph, vehicle));
+    }
+
 
 }
