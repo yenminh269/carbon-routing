@@ -1,82 +1,81 @@
 package com.minhho.demo.algorithm;
 import com.minhho.demo.model.*;
 import com.minhho.demo.service.CostStrategy;
+import com.minhho.demo.shared.GraphRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
 public class DijkstraRouter implements Router{
+    GraphRepository graphRepository =  new GraphRepository();
+
     @Override
-    public Path findShortestPath(Node start, Node end,
-                                       Map<Node, List<Edge>> graph, CostStrategy strategy, Vehicle vehicle) {
-        Map<Node, Double> dist = new HashMap<>();
-        Map<Node, Node> prev = new HashMap<>();
-        Map<Node, Edge> prevEdge = new HashMap<>();
+    public Path findShortestPath(String startId, String endId, CostStrategy strategy, Vehicle vehicle) {
+        Map<String, Double> dist = new HashMap<>();
+        Map<String, String> prev = new HashMap<>();
+        Map<String, Edge> prevEdge = new HashMap<>();
 
         PriorityQueue<NodeDistance> pq =
                 new PriorityQueue<>(Comparator.comparingDouble(NodeDistance::distance));
 
-        for (Node node : graph.keySet()) {
-            dist.put(node, Double.MAX_VALUE);
-        }
-
-        dist.put(start, 0.0);
-        pq.offer(new NodeDistance(start, 0.0));
+        dist.put(startId, 0.0);
+        pq.offer(new NodeDistance(startId, 0.0));
 
         while (!pq.isEmpty()) {
-            NodeDistance currentPair = pq.poll();
+            NodeDistance current = pq.poll();
+            String u = current.id();
 
-            Node current = currentPair.node();
+            if (u.equals(endId)) break;
 
-            if (currentPair.distance() > dist.get(current)) {
-                continue;
-            }
-
-            if (current.equals(end)) {
-                break;
-            }
-
-            List<Edge> edges = graph.getOrDefault(current, List.of());
+            List<Edge> edges = graphRepository.getEdges(u);
+            if (edges == null) continue;
 
             for (Edge edge : edges) {
-                Node neighbor = edge.to();
+
+                String v = edge.to().id();
 
                 double cost = strategy.calculate(edge);
 
-                double newCost = dist.get(current) + cost;
+                double newDist = dist.get(u) + cost;
 
-                if (newCost < dist.get(neighbor)) {
-                    dist.put(neighbor, newCost);
-                    prev.put(neighbor, current);
-                    prevEdge.put(neighbor, edge);
-
-                    pq.offer(new NodeDistance(neighbor, newCost));
+                if (newDist < dist.getOrDefault(v, Double.MAX_VALUE)) {
+                    dist.put(v, newDist);
+                    prev.put(v, u);
+                    prevEdge.put(v, edge);
+                    pq.offer(new NodeDistance(v, newDist));
                 }
             }
         }
 
-
-        return buildPath(start, end, prev, prevEdge, vehicle);
+        return buildPath(startId, endId, prev, prevEdge, vehicle);
     }
 
-    private Path buildPath(Node start, Node end,
-                           Map<Node, Node> prev, Map<Node, Edge> prevEdge, Vehicle vehicle) {
-        if (!start.equals(end) && !prev.containsKey(end)) {
+    private Path buildPath(String startId, String endId, Map<String, String> prev,
+                           Map<String, Edge> prevEdge, Vehicle vehicle) {
+
+        if (!startId.equals(endId) && !prev.containsKey(endId)) {
             throw new IllegalArgumentException("No path found");
         }
+
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
 
-        Node current = end;
+        String currentId = endId;
 
-        while (!current.equals(start)) {
-            nodes.add(current);
-            edges.add(prevEdge.get(current));
-            current = prev.get(current);
+        while (!currentId.equals(startId)) {
+
+            nodes.add(graphRepository.getNode(currentId));
+
+            Edge edge = prevEdge.get(currentId);
+            if (edge != null) {
+                edges.add(edge);
+            }
+
+            currentId = prev.get(currentId);
         }
 
-        nodes.add(start);
+        nodes.add(graphRepository.getNode(startId));
 
         Collections.reverse(nodes);
         Collections.reverse(edges);
@@ -87,16 +86,17 @@ public class DijkstraRouter implements Router{
 
         for (Edge edge : edges) {
             totalDistance += edge.distanceInMiles();
-
             totalTime += edge.distanceInMiles() / vehicle.avgSpeedInMiles();
-
             totalCarbon += edge.distanceInMiles() * vehicle.emissionRate();
         }
 
-
-
-        return new Path(nodes, edges, roundValue(totalDistance), roundValue(totalCarbon),
-                roundValue(totalTime));
+        return new Path(
+                nodes,
+                edges,
+                roundValue(totalDistance),
+                roundValue(totalCarbon),
+                roundValue(totalTime)
+        );
     }
 
 

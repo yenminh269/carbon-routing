@@ -17,7 +17,7 @@ public class RouteProcessor {
 
     public void setStrategy(CostStrategy _strategy){ strategy = _strategy; }
 
-    public Path findShortestPath(Node start, Node end, Map<Node, List<Edge>> graph, Vehicle vehicle){
-        return router.findShortestPath(start, end, graph, strategy, vehicle);
+    public Path findShortestPath(String start, String end, Map<String, List<Edge>> graph, Vehicle vehicle){
+        return router.findShortestPath(start, end, strategy, vehicle);
     }
 }

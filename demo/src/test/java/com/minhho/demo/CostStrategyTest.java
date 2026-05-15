@@ -8,6 +8,7 @@ import com.minhho.demo.model.Vehicle;
 import com.minhho.demo.service.CarbonStrategy;
 import com.minhho.demo.service.RouteProcessor;
 import com.minhho.demo.service.TimeStrategy;
+import com.minhho.demo.shared.GraphRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CostStrategyTest {
-    Node n0 = new Node(0, 0.5, 0.5);
-    Node n1 = new Node(1, 0.5, 0.5);
-    Node n2 = new Node(2, 0.5, 0.5);
-    Map<Node, List<Edge>> graph = new HashMap<>();
+    Node n0 = new Node("0", 0.5, 0.5);
+    Node n2 = new Node("2", 0.9, 0.1);
+    GraphRepository graphRepo = new GraphRepository();
+    Map<String, List<Edge>> graph = graphRepo.getGraph();
     RouteProcessor routeProcessor = new RouteProcessor();
 
     @Test
@@ -29,10 +30,6 @@ public class CostStrategyTest {
 
     @BeforeEach
     void setup() {
-        graph.put(n0, new ArrayList<>(Arrays.asList(new Edge(n1, 3), new Edge(n2, 5))));
-        graph.put(n1, new ArrayList<>(Arrays.asList(new Edge(n0, 3), new Edge(n2, 7))));
-        graph.put(n2, new ArrayList<>(Arrays.asList(new Edge(n0, 5), new Edge(n1, 7))));
-
         routeProcessor.setRoutingService(new DijkstraRouter());
     }
 
@@ -44,7 +41,7 @@ public class CostStrategyTest {
         Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
                 5, 600, 0.17);
 
-        assertEquals(expected, routeProcessor.findShortestPath(n0, n2, graph, vehicle));
+        assertEquals(expected, routeProcessor.findShortestPath("0", "2", graph, vehicle));
     }
 
     @Test
@@ -55,8 +52,6 @@ public class CostStrategyTest {
         Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
                 5, 0, 0.17);
 
-        assertEquals(expected, routeProcessor.findShortestPath(n0, n2, graph, vehicle));
+        assertEquals(expected, routeProcessor.findShortestPath("0", "2", graph, vehicle));
     }
-
-
 }

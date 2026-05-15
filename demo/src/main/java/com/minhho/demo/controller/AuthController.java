@@ -29,7 +29,7 @@ public class AuthController {
             AuthenticationManager authManager,
             JwtService jwtService,
             RefreshTokenRepository refreshTokenRepo,
-            RefreshTokenService refreshTokenService){
+            RefreshTokenService refreshTokenService) {
         this.authManager = authManager;
         this.jwtService = jwtService;
         this.refreshTokenRepository = refreshTokenRepo;
@@ -46,6 +46,7 @@ public class AuthController {
         );
         String accessToken = jwtService.generateAccessToken((UserDetails) auth.getPrincipal());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
+
         return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken()));
     }
 
@@ -67,5 +68,4 @@ public class AuthController {
         refreshTokenService.deleteByUsername(userDetails.getUsername());
         return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
-
 }
