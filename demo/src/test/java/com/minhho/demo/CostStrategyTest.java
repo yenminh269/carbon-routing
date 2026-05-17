@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CostStrategyTest {
-    Node n0 = new Node("0", 0.5, 0.5);
-    Node n2 = new Node("2", 0.9, 0.1);
+    Node n0 = new Node("A", 0.5, 0.5);
+    Node n2 = new Node("C", 0.9, 0.1);
     GraphRepository graphRepo = new GraphRepository();
     Map<String, List<Edge>> graph = graphRepo.getGraph();
     RouteProcessor routeProcessor = new RouteProcessor();
@@ -41,7 +41,7 @@ public class CostStrategyTest {
         Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
                 5, 600, 0.17);
 
-        assertEquals(expected, routeProcessor.findShortestPath("0", "2", graph, vehicle));
+        assertEquals(expected, routeProcessor.findShortestPath("A", "C", graph, vehicle));
     }
 
     @Test

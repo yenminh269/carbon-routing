@@ -12,17 +12,17 @@ public class GraphRepository {
     private final Map<String, List<Edge>> adjacencyList = new HashMap<>();
 
     public GraphRepository() {
-        Node n0 = new Node("0", 0.5, 0.5);
-        Node n1 = new Node("1", 0.6, 0.2);
-        Node n2 = new Node("2", 0.9, 0.1);
+        Node n0 = new Node("A", 0.5, 0.5);
+        Node n1 = new Node("B", 0.6, 0.2);
+        Node n2 = new Node("C", 0.9, 0.1);
 
-        nodes.put("0", n0);
-        nodes.put("1", n1);
-        nodes.put("2", n2);
+        nodes.put("A", n0);
+        nodes.put("B", n1);
+        nodes.put("C", n2);
 
-        adjacencyList.put("0", List.of(new Edge(n1, 3), new Edge(n2, 5)));
-        adjacencyList.put("1", List.of(new Edge(n0, 3), new Edge(n2, 7)));
-        adjacencyList.put("2", List.of(new Edge(n0, 5), new Edge(n1, 7)));
+        adjacencyList.put("A", List.of(new Edge(n1, 3), new Edge(n2, 5)));
+        adjacencyList.put("B", List.of(new Edge(n0, 3), new Edge(n2, 7)));
+        adjacencyList.put("C", List.of(new Edge(n0, 5), new Edge(n1, 7)));
     }
 
     public Node getNode(String id) {

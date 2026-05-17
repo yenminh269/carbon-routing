@@ -2,7 +2,6 @@ package com.minhho.demo.service;
 
 import com.minhho.demo.algorithm.Router;
 import com.minhho.demo.model.Edge;
-import com.minhho.demo.model.Node;
 import com.minhho.demo.model.Path;
 import com.minhho.demo.model.Vehicle;
 
