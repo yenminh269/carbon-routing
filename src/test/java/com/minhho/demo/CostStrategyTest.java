@@ -52,6 +52,6 @@ public class CostStrategyTest {
         Path expected = new Path(List.of(n0, n2), List.of( new Edge(n2, 5)),
                 5, 0, 0.17);
 
-        assertEquals(expected, routeProcessor.findShortestPath("0", "2", graph, vehicle));
+        assertEquals(expected, routeProcessor.findShortestPath("A", "C", graph, vehicle));
     }
 }
