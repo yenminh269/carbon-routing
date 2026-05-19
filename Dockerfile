@@ -1,7 +1,7 @@
 # Build stage
 FROM maven:3.9-eclipse-temurin-25 AS build
 WORKDIR /app
-COPY . .
+COPY demo .
 RUN mvn clean package -DskipTests
 
 # Run stage
