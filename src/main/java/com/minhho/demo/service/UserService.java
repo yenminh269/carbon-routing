@@ -1,6 +1,5 @@
 package com.minhho.demo.service;
 
-import com.minhho.demo.entity.Role;
 import com.minhho.demo.entity.User;
 
 import java.util.Optional;

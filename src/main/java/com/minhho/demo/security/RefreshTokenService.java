@@ -6,10 +6,12 @@ import com.minhho.demo.repository.RefreshTokenRepository;
 import com.minhho.demo.repository.UserRepository;
 import com.minhho.demo.service.UserDetailsImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
 @Service
+@Transactional
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
@@ -28,10 +30,13 @@ public class RefreshTokenService {
     }
 
     public RefreshToken createRefreshToken(String username){
-        User user = (userRepository.findByUsername(username).orElseThrow());
-        refreshTokenRepository.deleteByUserId(user.getId());
-        RefreshToken token = new RefreshToken(); //rotate
-        token.setUser(user);
+        User user = userRepository.findByUsername(username).orElseThrow();
+        RefreshToken token = refreshTokenRepository.findByUserId(user.getId())
+                .orElseGet(() -> {
+                    RefreshToken newToken = new RefreshToken();
+                    newToken.setUser(user);
+                    return newToken;
+                });
         token.setExpiryDate(Instant.now().plusMillis(jwtProperties.getRefreshTokenExpirationMs()));
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         token.setToken(jwtService.generateRefreshToken(userDetails));
